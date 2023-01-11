@@ -50,7 +50,7 @@ abstract class AbstractMigration implements MigrationInterface
      *
      * @var string|array
      */
-    protected $dbConfig = null;
+    protected $db_config = null;
 
     /**
      * @var float
@@ -271,15 +271,16 @@ abstract class AbstractMigration implements MigrationInterface
      * A short-hand method to drop the given database table.
      *
      * @param string $tableName Table Name
+     *
      * @return void
      */
-    public function dropTable($tableName)
+    public function dropTable(string $tableName)
     {
         $this->table($tableName)->drop();
     }
 
     public function getDbConfig()
     {
-        return $this->dbConfig;
+        return $this->db_config;
     }
 }
