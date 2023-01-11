@@ -92,7 +92,7 @@ abstract class Command extends \think\console\Command
     protected function getConfig($name, $default = null)
     {
         $config = Config::pull('migration');
-        return isset($config[$name]) ? $config[$name] : $default;
+        return $config[$name] ?? $default;
     }
 
     protected function verifyMigrationDirectory($path)
