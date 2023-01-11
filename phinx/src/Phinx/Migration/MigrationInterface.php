@@ -212,4 +212,9 @@ interface MigrationInterface
      * @return Table
      */
     public function table($tableName, $options);
+
+    /**
+     * @return mixed
+     */
+    public function getDbConfig();
 }

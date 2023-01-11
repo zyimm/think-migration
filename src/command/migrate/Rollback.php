@@ -13,6 +13,7 @@ use Phinx\Migration\MigrationInterface;
 use think\console\input\Option as InputOption;
 use think\console\Input;
 use think\console\Output;
+use think\Exception;
 use think\migration\command\Migrate;
 
 class Rollback extends Migrate
@@ -44,7 +45,9 @@ EOT
      *
      * @param Input  $input
      * @param Output $output
+     *
      * @return void
+     * @throws \Exception
      */
     protected function execute(Input $input, Output $output)
     {
@@ -65,7 +68,15 @@ EOT
         $output->writeln('<comment>All Done. Took ' . sprintf('%.4fs', $end - $start) . '</comment>');
     }
 
-    protected function rollback($version = null, $force = false)
+
+    /**
+     * @param $version
+     * @param bool $force
+     *
+     * @return void
+     * @throws Exception
+     */
+    protected function rollback($version = null, bool $force = false)
     {
         $migrations = $this->getMigrations();
         $versionLog = $this->getVersionLog();

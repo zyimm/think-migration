@@ -9,6 +9,7 @@
 
 namespace think\migration\command\migrate;
 
+use Exception;
 use Phinx\Migration\MigrationInterface;
 use think\console\Input;
 use think\console\input\Option as InputOption;
@@ -43,7 +44,9 @@ EOT
      *
      * @param Input  $input
      * @param Output $output
-     * @return integer integer 0 on success, or an error code.
+     *
+     * @return void
+     * @throws Exception
      */
     protected function execute(Input $input, Output $output)
     {
@@ -79,6 +82,12 @@ EOT
         }
     }
 
+    /**
+     * @param $version
+     *
+     * @return void
+     * @throws \think\Exception
+     */
     protected function migrate($version = null)
     {
         $migrations = $this->getMigrations();

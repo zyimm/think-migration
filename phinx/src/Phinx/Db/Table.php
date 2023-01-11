@@ -26,12 +26,15 @@
  * @package    Phinx
  * @subpackage Phinx\Db
  */
+
 namespace Phinx\Db;
 
-use Phinx\Db\Table\Column;
-use Phinx\Db\Table\Index;
-use Phinx\Db\Table\ForeignKey;
+use InvalidArgumentException;
 use Phinx\Db\Adapter\AdapterInterface;
+use Phinx\Db\Table\Column;
+use Phinx\Db\Table\ForeignKey;
+use Phinx\Db\Table\Index;
+use RuntimeException;
 
 /**
  *
@@ -47,7 +50,7 @@ class Table
     /**
      * @var array
      */
-    protected $options = array();
+    protected $options = [];
 
     /**
      * @var AdapterInterface
@@ -57,31 +60,31 @@ class Table
     /**
      * @var array
      */
-    protected $columns = array();
+    protected $columns = [];
 
     /**
      * @var array
      */
-    protected $indexes = array();
+    protected $indexes = [];
 
     /**
      * @var ForeignKey[]
      */
-    protected $foreignKeys = array();
+    protected $foreignKeys = [];
 
     /**
      * @var array
      */
-    protected $data = array();
+    protected $data = [];
 
     /**
      * Class Constuctor.
      *
-     * @param string $name Table Name
-     * @param array $options Options
+     * @param string           $name    Table Name
+     * @param array            $options Options
      * @param AdapterInterface $adapter Database Adapter
      */
-    public function __construct($name, $options = array(), AdapterInterface $adapter = null)
+    public function __construct(string $name, array $options = [], AdapterInterface $adapter = null)
     {
         $this->setName($name);
         $this->setOptions($options);
@@ -95,9 +98,10 @@ class Table
      * Sets the table name.
      *
      * @param string $name Table Name
+     *
      * @return Table
      */
-    public function setName($name)
+    public function setName(string $name): Table
     {
         $this->name = $name;
         return $this;
@@ -108,7 +112,7 @@ class Table
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -117,9 +121,10 @@ class Table
      * Sets the table options.
      *
      * @param array $options
+     *
      * @return Table
      */
-    public function setOptions($options)
+    public function setOptions(array $options): Table
     {
         $this->options = $options;
         return $this;
@@ -130,7 +135,7 @@ class Table
      *
      * @return array
      */
-    public function getOptions()
+    public function getOptions(): array
     {
         return $this->options;
     }
@@ -139,9 +144,10 @@ class Table
      * Sets the database adapter.
      *
      * @param AdapterInterface $adapter Database Adapter
+     *
      * @return Table
      */
-    public function setAdapter(AdapterInterface $adapter)
+    public function setAdapter(AdapterInterface $adapter): Table
     {
         $this->adapter = $adapter;
         return $this;
@@ -152,7 +158,7 @@ class Table
      *
      * @return AdapterInterface
      */
-    public function getAdapter()
+    public function getAdapter(): AdapterInterface
     {
         return $this->adapter;
     }
@@ -162,7 +168,7 @@ class Table
      *
      * @return boolean
      */
-    public function exists()
+    public function exists(): bool
     {
         return $this->getAdapter()->hasTable($this->getName());
     }
@@ -181,9 +187,10 @@ class Table
      * Renames the database table.
      *
      * @param string $newTableName New Table Name
+     *
      * @return Table
      */
-    public function rename($newTableName)
+    public function rename(string $newTableName): Table
     {
         $this->getAdapter()->renameTable($this->getName(), $newTableName);
         $this->setName($newTableName);
@@ -194,13 +201,14 @@ class Table
      * Sets an array of columns waiting to be committed.
      * Use setPendingColumns
      *
-     * @deprecated
      * @param array $columns Columns
+     *
      * @return Table
+     * @deprecated
      */
-    public function setColumns($columns)
+    public function setColumns(array $columns): Table
     {
-        $this->setPendingColumns($columns);
+        return $this->setPendingColumns($columns);
     }
 
     /**
@@ -208,7 +216,7 @@ class Table
      *
      * @return Column[]
      */
-    public function getColumns()
+    public function getColumns(): array
     {
         return $this->getAdapter()->getColumns($this->getName());
     }
@@ -217,9 +225,10 @@ class Table
      * Sets an array of columns waiting to be committed.
      *
      * @param array $columns Columns
+     *
      * @return Table
      */
-    public function setPendingColumns($columns)
+    public function setPendingColumns(array $columns): Table
     {
         $this->columns = $columns;
         return $this;
@@ -230,7 +239,7 @@ class Table
      *
      * @return Column[]
      */
-    public function getPendingColumns()
+    public function getPendingColumns(): array
     {
         return $this->columns;
     }
@@ -239,9 +248,10 @@ class Table
      * Sets an array of columns waiting to be indexed.
      *
      * @param array $indexes Indexes
+     *
      * @return Table
      */
-    public function setIndexes($indexes)
+    public function setIndexes(array $indexes): Table
     {
         $this->indexes = $indexes;
         return $this;
@@ -252,7 +262,7 @@ class Table
      *
      * @return array
      */
-    public function getIndexes()
+    public function getIndexes(): array
     {
         return $this->indexes;
     }
@@ -261,9 +271,10 @@ class Table
      * Sets an array of foreign keys waiting to be commited.
      *
      * @param ForeignKey[] $foreignKeys foreign keys
+     *
      * @return Table
      */
-    public function setForeignKeys($foreignKeys)
+    public function setForeignKeys(array $foreignKeys): Table
     {
         $this->foreignKeys = $foreignKeys;
         return $this;
@@ -274,7 +285,7 @@ class Table
      *
      * @return array|ForeignKey[]
      */
-    public function getForeignKeys()
+    public function getForeignKeys(): array
     {
         return $this->foreignKeys;
     }
@@ -283,9 +294,10 @@ class Table
      * Sets an array of data to be inserted.
      *
      * @param array $data Data
+     *
      * @return Table
      */
-    public function setData($data)
+    public function setData(array $data): Table
     {
         $this->data = $data;
         return $this;
@@ -296,22 +308,22 @@ class Table
      *
      * @return array
      */
-    public function getData()
+    public function getData(): array
     {
         return $this->data;
     }
 
     /**
-     * Resets all of the pending table changes.
+     * Resets all the pending table changes.
      *
      * @return void
      */
     public function reset()
     {
-        $this->setPendingColumns(array());
-        $this->setIndexes(array());
-        $this->setForeignKeys(array());
-        $this->setData(array());
+        $this->setPendingColumns([]);
+        $this->setIndexes([]);
+        $this->setForeignKeys([]);
+        $this->setData([]);
     }
 
     /**
@@ -323,17 +335,18 @@ class Table
      * Valid options can be: limit, default, null, precision or scale.
      *
      * @param string|Column $columnName Column Name
-     * @param string $type Column Type
-     * @param array $options Column Options
-     * @throws \RuntimeException
-     * @throws \InvalidArgumentException
+     * @param string|null   $type       Column Type
+     * @param array         $options    Column Options
+     *
      * @return Table
+     * @throws InvalidArgumentException
+     * @throws RuntimeException
      */
-    public function addColumn($columnName, $type = null, $options = array())
+    public function addColumn($columnName, string $type = null, array $options = []): Table
     {
         // we need an adapter set to add a column
         if (null === $this->getAdapter()) {
-            throw new \RuntimeException('An adapter must be specified to add a column.');
+            throw new RuntimeException('An adapter must be specified to add a column.');
         }
 
         // create a new column object if only strings were supplied
@@ -348,7 +361,7 @@ class Table
 
         // Delegate to Adapters to check column type
         if (!$this->getAdapter()->isValidColumnType($column)) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new InvalidArgumentException(sprintf(
                 'An invalid column type "%s" was specified for column "%s".',
                 $column->getType(),
                 $column->getName()
@@ -363,9 +376,10 @@ class Table
      * Remove a table column.
      *
      * @param string $columnName Column Name
+     *
      * @return Table
      */
-    public function removeColumn($columnName)
+    public function removeColumn(string $columnName): Table
     {
         $this->getAdapter()->dropColumn($this->getName(), $columnName);
         return $this;
@@ -376,9 +390,10 @@ class Table
      *
      * @param string $oldName Old Column Name
      * @param string $newName New Column Name
+     *
      * @return Table
      */
-    public function renameColumn($oldName, $newName)
+    public function renameColumn(string $oldName, string $newName): Table
     {
         $this->getAdapter()->renameColumn($this->getName(), $oldName, $newName);
         return $this;
@@ -390,9 +405,10 @@ class Table
      * @param string        $columnName    Column Name
      * @param string|Column $newColumnType New Column Type
      * @param array         $options       Options
+     *
      * @return Table
      */
-    public function changeColumn($columnName, $newColumnType, $options = array())
+    public function changeColumn(string $columnName, $newColumnType, array $options = []): Table
     {
         // create a column object if one wasn't supplied
         if (!$newColumnType instanceof Column) {
@@ -416,10 +432,11 @@ class Table
      * Checks to see if a column exists.
      *
      * @param string $columnName Column Name
-     * @param array $options Options
+     * @param array  $options    Options
+     *
      * @return boolean
      */
-    public function hasColumn($columnName, $options = array())
+    public function hasColumn(string $columnName, array $options = []): bool
     {
         return $this->getAdapter()->hasColumn($this->getName(), $columnName, $options);
     }
@@ -430,16 +447,17 @@ class Table
      * In $options you can specific unique = true/false or name (index name).
      *
      * @param string|array|Index $columns Table Column(s)
-     * @param array $options Index Options
+     * @param array              $options Index Options
+     *
      * @return Table
      */
-    public function addIndex($columns, $options = array())
+    public function addIndex($columns, array $options = []): Table
     {
-        // create a new index object if strings or an array of strings were supplied
+        // create a new index object if strings or an array of strings is supplied
         if (!$columns instanceof Index) {
             $index = new Index();
             if (is_string($columns)) {
-                $columns = array($columns); // str to array
+                $columns = [$columns]; // str to array
             }
             $index->setColumns($columns);
             $index->setOptions($options);
@@ -456,9 +474,10 @@ class Table
      *
      * @param array $columns Columns
      * @param array $options Options
+     *
      * @return Table
      */
-    public function removeIndex($columns, $options = array())
+    public function removeIndex(array $columns, array $options = []): Table
     {
         $this->getAdapter()->dropIndex($this->getName(), $columns, $options);
         return $this;
@@ -468,9 +487,10 @@ class Table
      * Removes the given index identified by its name from a table.
      *
      * @param string $name Index name
+     *
      * @return Table
      */
-    public function removeIndexByName($name)
+    public function removeIndexByName(string $name): Table
     {
         $this->getAdapter()->dropIndexByName($this->getName(), $name);
         return $this;
@@ -480,12 +500,12 @@ class Table
      * Checks to see if an index exists.
      *
      * @param string|array $columns Columns
-     * @param array        $options Options
+     *
      * @return boolean
      */
-    public function hasIndex($columns, $options = array())
+    public function hasIndex($columns): bool
     {
-        return $this->getAdapter()->hasIndex($this->getName(), $columns, $options);
+        return $this->getAdapter()->hasIndex($this->getName(), $columns);
     }
 
     /**
@@ -494,22 +514,23 @@ class Table
      * In $options you can specify on_delete|on_delete = cascade|no_action ..,
      * on_update, constraint = constraint name.
      *
-     * @param string|array $columns Columns
+     * @param string|array $columns           Columns
      * @param string|Table $referencedTable   Referenced Table
      * @param string|array $referencedColumns Referenced Columns
-     * @param array $options Options
+     * @param array        $options           Options
+     *
      * @return Table
      */
-    public function addForeignKey($columns, $referencedTable, $referencedColumns = array('id'), $options = array())
+    public function addForeignKey($columns, $referencedTable, $referencedColumns = ['id'], array $options = []): Table
     {
         if (is_string($referencedColumns)) {
-            $referencedColumns = array($referencedColumns); // str to array
+            $referencedColumns = [$referencedColumns]; // str to array
         }
         $fk = new ForeignKey();
         if ($referencedTable instanceof Table) {
             $fk->setReferencedTable($referencedTable);
         } else {
-            $fk->setReferencedTable(new Table($referencedTable, array(), $this->adapter));
+            $fk->setReferencedTable(new Table($referencedTable, [], $this->adapter));
         }
         $fk->setColumns($columns)
            ->setReferencedColumns($referencedColumns)
@@ -523,16 +544,17 @@ class Table
      * Removes the given foreign key from the table.
      *
      * @param string|array $columns    Column(s)
-     * @param null|string  $constraint Constraint names
+     * @param string|null  $constraint Constraint names
+     *
      * @return Table
      */
-    public function dropForeignKey($columns, $constraint = null)
+    public function dropForeignKey($columns, string $constraint = null): Table
     {
         if (is_string($columns)) {
-            $columns = array($columns);
+            $columns = [$columns];
         }
         if ($constraint) {
-            $this->getAdapter()->dropForeignKey($this->getName(), array(), $constraint);
+            $this->getAdapter()->dropForeignKey($this->getName(), [], $constraint);
         } else {
             $this->getAdapter()->dropForeignKey($this->getName(), $columns);
         }
@@ -543,11 +565,12 @@ class Table
     /**
      * Checks to see if a foreign key exists.
      *
-     * @param  string|array $columns    Column(s)
-     * @param  null|string  $constraint Constraint names
+     * @param string|array $columns    Column(s)
+     * @param string|null  $constraint Constraint names
+     *
      * @return boolean
      */
-    public function hasForeignKey($columns, $constraint = null)
+    public function hasForeignKey($columns, string $constraint = null): bool
     {
         return $this->getAdapter()->hasForeignKey($this->getName(), $columns, $constraint);
     }
@@ -560,18 +583,18 @@ class Table
      *
      * @return Table
      */
-    public function addTimestamps($createdAtColumnName = 'created_at', $updatedAtColumnName = 'updated_at')
+    public function addTimestamps(string $createdAtColumnName = 'created_at', string $updatedAtColumnName = 'updated_at'): Table
     {
         $createdAtColumnName = is_null($createdAtColumnName) ? 'created_at' : $createdAtColumnName;
         $updatedAtColumnName = is_null($updatedAtColumnName) ? 'updated_at' : $updatedAtColumnName;
-        $this->addColumn($createdAtColumnName, 'timestamp', array(
-                'default' => 'CURRENT_TIMESTAMP',
-                'update' => ''
-            ))
-             ->addColumn($updatedAtColumnName, 'timestamp', array(
-                'null'    => true,
-                'default' => null
-             ));
+        $this->addColumn($createdAtColumnName, 'timestamp', [
+            'default' => 'CURRENT_TIMESTAMP',
+            'update'  => ''
+        ])
+             ->addColumn($updatedAtColumnName, 'timestamp', [
+                 'null'    => true,
+                 'default' => null
+             ]);
 
         return $this;
     }
@@ -579,16 +602,16 @@ class Table
     /**
      * Insert data into the table.
      *
-     * @param $data array of data in the form:
-     *              array(
+     * @param $data     array of data in the form:
+     *                  array(
      *                  array("col1" => "value1", "col2" => "anotherValue1"),
      *                  array("col2" => "value2", "col2" => "anotherValue2"),
-     *              )
-     *              or array("col1" => "value1", "col2" => "anotherValue1")
+     *                  )
+     *                  or array("col1" => "value1", "col2" => "anotherValue1")
      *
      * @return Table
      */
-    public function insert($data)
+    public function insert(array $data): Table
     {
         // handle array of array situations
         if (isset($data[0]) && is_array($data[0])) {
@@ -616,13 +639,13 @@ class Table
     /**
      * Updates a table from the object instance.
      *
-     * @throws \RuntimeException
      * @return void
+     * @throws RuntimeException
      */
     public function update()
     {
         if (!$this->exists()) {
-            throw new \RuntimeException('Cannot update a table that doesn\'t exist!');
+            throw new RuntimeException('Cannot update a table that doesn\'t exist!');
         }
 
         // update table

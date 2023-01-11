@@ -46,6 +46,13 @@ use think\console\Output as OutputInterface;
 abstract class AbstractMigration implements MigrationInterface
 {
     /**
+     * 数据库配置
+     *
+     * @var string|array
+     */
+    protected $dbConfig = null;
+
+    /**
      * @var float
      */
     protected $version;
@@ -68,11 +75,11 @@ abstract class AbstractMigration implements MigrationInterface
     /**
      * Class Constructor.
      *
-     * @param int $version Migration Version
-     * @param InputInterface|null $input
+     * @param int                  $version Migration Version
+     * @param InputInterface|null  $input
      * @param OutputInterface|null $output
      */
-    final public function __construct($version, InputInterface $input = null, OutputInterface $output = null)
+    final public function __construct(int $version, InputInterface $input = null, OutputInterface $output = null)
     {
         $this->version = $version;
         if (!is_null($input)){
@@ -120,7 +127,7 @@ abstract class AbstractMigration implements MigrationInterface
     /**
      * {@inheritdoc}
      */
-    public function getAdapter()
+    public function getAdapter(): AdapterInterface
     {
         return $this->adapter;
     }
@@ -203,7 +210,7 @@ abstract class AbstractMigration implements MigrationInterface
     /**
      * {@inheritdoc}
      */
-    public function fetchRow($sql)
+    public function fetchRow($sql): array
     {
         return $this->getAdapter()->fetchRow($sql);
     }
@@ -211,7 +218,7 @@ abstract class AbstractMigration implements MigrationInterface
     /**
      * {@inheritdoc}
      */
-    public function fetchAll($sql)
+    public function fetchAll($sql): array
     {
         return $this->getAdapter()->fetchAll($sql);
     }
@@ -269,5 +276,10 @@ abstract class AbstractMigration implements MigrationInterface
     public function dropTable($tableName)
     {
         $this->table($tableName)->drop();
+    }
+
+    public function getDbConfig()
+    {
+        return $this->dbConfig;
     }
 }

@@ -1,9 +1,13 @@
 {
-  "name": "topthink/think-migration",
+  "name": "zyimm/think-migration",
   "authors": [
     {
       "name": "yunwuxin",
       "email": "448901948@qq.com"
+    },
+    {
+      "name": "zyimm",
+      "email": "zyimm@qq.com"
     }
   ],
   "license": "Apache-2.0",
@@ -17,6 +21,12 @@
     ]
   },
   "require": {
-      "topthink/framework": "5.1.*"
+    "php": ">=7.0",
+    "topthink/framework": "5.1.*"
+  },
+  "config": {
+    "allow-plugins": {
+      "topthink/think-installer": true
+    }
   }
 }

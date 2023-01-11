@@ -15,12 +15,13 @@ use think\migration\db\Table;
 
 class Migrator extends AbstractMigration
 {
+
     /**
      * @param string $tableName
      * @param array  $options
      * @return Table
      */
-    public function table($tableName, $options = [])
+    public function table($tableName, $options = []): Table
     {
         return new Table($tableName, $options, $this->getAdapter());
     }

@@ -95,20 +95,22 @@ class Table extends \Phinx\Db\Table
     /**
      * @param string $createdAtColumnName
      * @param string $updatedAtColumnName
+     *
      * @return \Phinx\Db\Table|Table
      */
-    public function addTimestamps($createdAtColumnName = 'create_time', $updatedAtColumnName = 'update_time')
+    public function addTimestamps(string $createdAtColumnName = 'create_time', string $updatedAtColumnName = 'update_time')
     {
         return parent::addTimestamps($createdAtColumnName, $updatedAtColumnName);
     }
 
     /**
      * @param \Phinx\Db\Table\Column|string $columnName
-     * @param null                          $type
+     * @param string|null                   $type
      * @param array                         $options
+     *
      * @return \Phinx\Db\Table|Table
      */
-    public function addColumn($columnName, $type = null, $options = [])
+    public function addColumn($columnName, string $type = null, array $options = [])
     {
         if ($columnName instanceof Column && $columnName->getUnique()) {
             $index = new Index();
@@ -123,9 +125,10 @@ class Table extends \Phinx\Db\Table
      * @param string $columnName
      * @param null   $newColumnType
      * @param array  $options
+     *
      * @return \Phinx\Db\Table|Table
      */
-    public function changeColumn($columnName, $newColumnType = null, $options = [])
+    public function changeColumn(string $columnName, $newColumnType, array $options = [])
     {
         if ($columnName instanceof \Phinx\Db\Table\Column) {
             return parent::changeColumn($columnName->getName(), $columnName, $options);

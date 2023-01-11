@@ -12,18 +12,27 @@ namespace think\migration;
 
 use InvalidArgumentException;
 use Phinx\Db\Adapter\AdapterFactory;
+use Phinx\Db\Adapter\AdapterInterface;
 use think\Db;
+use think\Exception;
 use think\facade\Config;
 
 abstract class Command extends \think\console\Command
 {
+    protected $dbConfig = null;
 
-    public function getAdapter()
+    /**
+     * @param string|null $db_config
+     *
+     * @return AdapterInterface
+     * @throws Exception
+     */
+    public function getAdapter(string $db_config = null): AdapterInterface
     {
         if (isset($this->adapter)) {
             return $this->adapter;
         }
-
+        $this->dbConfig = $db_config;
         $options = $this->getDbConfig();
 
         $adapter = AdapterFactory::instance()->getAdapter($options['adapter'], $options);
@@ -40,10 +49,11 @@ abstract class Command extends \think\console\Command
     /**
      * 获取数据库配置
      * @return array
+     * @throws Exception
      */
-    protected function getDbConfig()
+    protected function getDbConfig(): array
     {
-        $config = Db::connect()->getConfig();
+        $config = Db::connect($this->dbConfig)->getConfig();
 
         if (0 == $config['deploy']) {
             $dbConfig = [
