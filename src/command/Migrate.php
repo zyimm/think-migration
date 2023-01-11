@@ -17,8 +17,6 @@ use Phinx\Db\Adapter\ProxyAdapter;
 use Phinx\Migration\AbstractMigration;
 use Phinx\Migration\MigrationInterface;
 use Phinx\Util\Util;
-use think\console\Input;
-use think\console\Output;
 use think\Exception;
 use think\facade\Env;
 use think\migration\Command;
@@ -64,8 +62,8 @@ abstract class Migrate extends Command
         // Run the migration
         if (method_exists($migration, MigrationInterface::CHANGE)) {
             if (MigrationInterface::DOWN === $direction) {
-                // Create an instance of the ProxyAdapter so we can record all
-                // of the migration commands for reverse playback
+                // Create an instance of the ProxyAdapter, so we can record all
+                // the migration commands for reverse playback
                 /** @var ProxyAdapter $proxyAdapter */
                 $proxyAdapter = AdapterFactory::instance()->getWrapper('proxy', $this->getAdapter());
                 $migration->setAdapter($proxyAdapter);
@@ -87,7 +85,7 @@ abstract class Migrate extends Command
         }
 
         // Record it in the database
-        $this->getAdapter($migration->getDbConfig())
+        $this->getAdapter()
              ->migrated($migration, $direction, date('Y-m-d H:i:s', $startTime), date('Y-m-d H:i:s', time()));
 
         $end = microtime(true);
