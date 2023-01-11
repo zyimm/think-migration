@@ -101,7 +101,7 @@ class Table
      *
      * @return Table
      */
-    public function setName(string $name): Table
+    public function setName(string $name)
     {
         $this->name = $name;
         return $this;
@@ -124,7 +124,7 @@ class Table
      *
      * @return Table
      */
-    public function setOptions(array $options): Table
+    public function setOptions(array $options)
     {
         $this->options = $options;
         return $this;
@@ -147,7 +147,7 @@ class Table
      *
      * @return Table
      */
-    public function setAdapter(AdapterInterface $adapter): Table
+    public function setAdapter(AdapterInterface $adapter)
     {
         $this->adapter = $adapter;
         return $this;
@@ -190,7 +190,7 @@ class Table
      *
      * @return Table
      */
-    public function rename(string $newTableName): Table
+    public function rename(string $newTableName)
     {
         $this->getAdapter()->renameTable($this->getName(), $newTableName);
         $this->setName($newTableName);
@@ -206,7 +206,7 @@ class Table
      * @return Table
      * @deprecated
      */
-    public function setColumns(array $columns): Table
+    public function setColumns(array $columns)
     {
         return $this->setPendingColumns($columns);
     }
@@ -228,7 +228,7 @@ class Table
      *
      * @return Table
      */
-    public function setPendingColumns(array $columns): Table
+    public function setPendingColumns(array $columns)
     {
         $this->columns = $columns;
         return $this;
@@ -251,7 +251,7 @@ class Table
      *
      * @return Table
      */
-    public function setIndexes(array $indexes): Table
+    public function setIndexes(array $indexes)
     {
         $this->indexes = $indexes;
         return $this;
@@ -274,7 +274,7 @@ class Table
      *
      * @return Table
      */
-    public function setForeignKeys(array $foreignKeys): Table
+    public function setForeignKeys(array $foreignKeys)
     {
         $this->foreignKeys = $foreignKeys;
         return $this;
@@ -297,7 +297,7 @@ class Table
      *
      * @return Table
      */
-    public function setData(array $data): Table
+    public function setData(array $data)
     {
         $this->data = $data;
         return $this;
@@ -342,7 +342,7 @@ class Table
      * @throws InvalidArgumentException
      * @throws RuntimeException
      */
-    public function addColumn($columnName, string $type = null, array $options = []): Table
+    public function addColumn($columnName, string $type = null, array $options = [])
     {
         // we need an adapter set to add a column
         if (null === $this->getAdapter()) {
@@ -379,7 +379,7 @@ class Table
      *
      * @return Table
      */
-    public function removeColumn(string $columnName): Table
+    public function removeColumn(string $columnName)
     {
         $this->getAdapter()->dropColumn($this->getName(), $columnName);
         return $this;
@@ -393,7 +393,7 @@ class Table
      *
      * @return Table
      */
-    public function renameColumn(string $oldName, string $newName): Table
+    public function renameColumn(string $oldName, string $newName)
     {
         $this->getAdapter()->renameColumn($this->getName(), $oldName, $newName);
         return $this;
@@ -408,7 +408,7 @@ class Table
      *
      * @return Table
      */
-    public function changeColumn(string $columnName, $newColumnType, array $options = []): Table
+    public function changeColumn(string $columnName, $newColumnType, array $options = [])
     {
         // create a column object if one wasn't supplied
         if (!$newColumnType instanceof Column) {
@@ -451,7 +451,7 @@ class Table
      *
      * @return Table
      */
-    public function addIndex($columns, array $options = []): Table
+    public function addIndex($columns, array $options = [])
     {
         // create a new index object if strings or an array of strings is supplied
         if (!$columns instanceof Index) {
@@ -477,7 +477,7 @@ class Table
      *
      * @return Table
      */
-    public function removeIndex(array $columns, array $options = []): Table
+    public function removeIndex(array $columns, array $options = [])
     {
         $this->getAdapter()->dropIndex($this->getName(), $columns, $options);
         return $this;
@@ -490,7 +490,7 @@ class Table
      *
      * @return Table
      */
-    public function removeIndexByName(string $name): Table
+    public function removeIndexByName(string $name)
     {
         $this->getAdapter()->dropIndexByName($this->getName(), $name);
         return $this;
@@ -521,7 +521,7 @@ class Table
      *
      * @return Table
      */
-    public function addForeignKey($columns, $referencedTable, $referencedColumns = ['id'], array $options = []): Table
+    public function addForeignKey($columns, $referencedTable, $referencedColumns = ['id'], array $options = [])
     {
         if (is_string($referencedColumns)) {
             $referencedColumns = [$referencedColumns]; // str to array
@@ -548,7 +548,7 @@ class Table
      *
      * @return Table
      */
-    public function dropForeignKey($columns, string $constraint = null): Table
+    public function dropForeignKey($columns, string $constraint = null)
     {
         if (is_string($columns)) {
             $columns = [$columns];
@@ -583,7 +583,7 @@ class Table
      *
      * @return Table
      */
-    public function addTimestamps(string $createdAtColumnName = 'created_at', string $updatedAtColumnName = 'updated_at'): Table
+    public function addTimestamps(string $createdAtColumnName = 'created_at', string $updatedAtColumnName = 'updated_at')
     {
         $createdAtColumnName = is_null($createdAtColumnName) ? 'created_at' : $createdAtColumnName;
         $updatedAtColumnName = is_null($updatedAtColumnName) ? 'updated_at' : $updatedAtColumnName;
@@ -611,7 +611,7 @@ class Table
      *
      * @return Table
      */
-    public function insert(array $data): Table
+    public function insert(array $data)
     {
         // handle array of array situations
         if (isset($data[0]) && is_array($data[0])) {

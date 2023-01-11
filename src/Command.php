@@ -22,6 +22,11 @@ abstract class Command extends \think\console\Command
     protected $dbConfig = null;
 
     /**
+     * @var AdapterInterface
+     */
+    private $adapter;
+
+    /**
      * @param string|null $db_config
      *
      * @return AdapterInterface
@@ -29,9 +34,9 @@ abstract class Command extends \think\console\Command
      */
     public function getAdapter(string $db_config = null): AdapterInterface
     {
-        if (isset($this->adapter)) {
-            return $this->adapter;
-        }
+//        if (isset($this->adapter)) {
+//            return $this->adapter;
+//        }
         $this->dbConfig = $db_config;
         $options = $this->getDbConfig();
 
@@ -43,7 +48,7 @@ abstract class Command extends \think\console\Command
 
         $this->adapter = $adapter;
 
-        return $adapter;
+        return $this->adapter;
     }
 
     /**

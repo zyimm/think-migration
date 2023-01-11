@@ -53,11 +53,12 @@ abstract class Migrate extends Command
 
         $startTime = time();
         $direction = (MigrationInterface::UP === $direction) ? MigrationInterface::UP : MigrationInterface::DOWN;
+
         $migration->setAdapter($this->getAdapter($migration->getDbConfig()));
 
         // begin the transaction if the adapter supports it
-        if ($this->getAdapter()->hasTransactions()) {
-            $this->getAdapter()->beginTransaction();
+        if ($this->getAdapter($migration->getDbConfig())->hasTransactions()) {
+            $this->getAdapter($migration->getDbConfig())->beginTransaction();
         }
 
         // Run the migration
@@ -81,13 +82,13 @@ abstract class Migrate extends Command
         }
 
         // commit the transaction if the adapter supports it
-        if ($this->getAdapter()->hasTransactions()) {
-            $this->getAdapter()->commitTransaction();
+        if ($this->getAdapter($migration->getDbConfig())->hasTransactions()) {
+            $this->getAdapter($migration->getDbConfig())->commitTransaction();
         }
 
         // Record it in the database
-        $this->getAdapter()
-            ->migrated($migration, $direction, date('Y-m-d H:i:s', $startTime), date('Y-m-d H:i:s', time()));
+        $this->getAdapter($migration->getDbConfig())
+             ->migrated($migration, $direction, date('Y-m-d H:i:s', $startTime), date('Y-m-d H:i:s', time()));
 
         $end = microtime(true);
 
