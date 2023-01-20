@@ -17,7 +17,7 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
@@ -26,7 +26,12 @@
  * @package    Phinx
  * @subpackage Phinx\Util
  */
+
 namespace Phinx\Util;
+
+use DateTime;
+use DateTimeZone;
+use Exception;
 
 class Util
 {
@@ -49,21 +54,24 @@ class Util
      * Gets the current timestamp string, in UTC.
      *
      * @return string
+     * @throws Exception
      */
-    public static function getCurrentTimestamp()
+    public static function getCurrentTimestamp(): string
     {
-        $dt = new \DateTime('now', new \DateTimeZone('UTC'));
+        $dt = new DateTime('now', new DateTimeZone('UTC'));
         return $dt->format(static::DATE_FORMAT);
     }
 
     /**
      * Gets an array of all the existing migration class names.
      *
-     * @return string
+     * @param $path
+     *
+     * @return array
      */
-    public static function getExistingMigrationClassNames($path)
+    public static function getExistingMigrationClassNames($path): array
     {
-        $classNames = array();
+        $classNames = [];
 
         if (!is_dir($path)) {
             return $classNames;
@@ -85,11 +93,12 @@ class Util
      * Get the version from the beginning of a file name.
      *
      * @param string $fileName File Name
+     *
      * @return string
      */
-    public static function getVersionFromFileName($fileName)
+    public static function getVersionFromFileName(string $fileName): string
     {
-        $matches = array();
+        $matches = [];
         preg_match('/^[0-9]+/', basename($fileName), $matches);
         return $matches[0];
     }
@@ -100,14 +109,15 @@ class Util
      * '12345678901234_limit_resource_names_to_30_chars.php'.
      *
      * @param string $className Class Name
+     *
      * @return string
+     * @throws Exception
      */
-    public static function mapClassNameToFileName($className)
+    public static function mapClassNameToFileName(string $className): string
     {
         $arr = preg_split('/(?=[A-Z])/', $className);
         unset($arr[0]); // remove the first element ('')
-        $fileName = static::getCurrentTimestamp() . '_' . strtolower(implode($arr, '_')) . '.php';
-        return $fileName;
+        return static::getCurrentTimestamp() . '_' . strtolower(implode('_', $arr)) . '.php';
     }
 
     /**
@@ -115,11 +125,12 @@ class Util
      * names like 'CreateUserTable'.
      *
      * @param string $fileName File Name
+     *
      * @return string
      */
-    public static function mapFileNameToClassName($fileName)
+    public static function mapFileNameToClassName(string $fileName): string
     {
-        $matches = array();
+        $matches = [];
         if (preg_match(static::MIGRATION_FILE_NAME_PATTERN, $fileName, $matches)) {
             $fileName = $matches[1];
         }
@@ -131,7 +142,7 @@ class Util
      * Check if a migration class name is unique regardless of the
      * timestamp.
      *
-     * This method takes a class name and a path to a migrations directory.
+     * This method takes a class name and a path to a migrations' directory.
      *
      * Migration class names must be in CamelCase format.
      * e.g: CreateUserTable or AddIndexToPostsTable.
@@ -139,10 +150,11 @@ class Util
      * Single words are not allowed on their own.
      *
      * @param string $className Class Name
-     * @param string $path Path
+     * @param string $path      Path
+     *
      * @return boolean
      */
-    public static function isUniqueMigrationClassName($className, $path)
+    public static function isUniqueMigrationClassName(string $className, string $path): bool
     {
         $existingClassNames = static::getExistingMigrationClassNames($path);
         return !(in_array($className, $existingClassNames));
@@ -157,22 +169,24 @@ class Util
      * Single words are not allowed on their own.
      *
      * @param string $className Class Name
+     *
      * @return boolean
      */
-    public static function isValidPhinxClassName($className)
+    public static function isValidPhinxClassName(string $className): bool
     {
-        return (bool) preg_match('/^([A-Z][a-z0-9]+)+$/', $className);
+        return (bool)preg_match('/^([A-Z][a-z0-9]+)+$/', $className);
     }
 
     /**
      * Check if a migration file name is valid.
      *
      * @param string $fileName File Name
+     *
      * @return boolean
      */
-    public static function isValidMigrationFileName($fileName)
+    public static function isValidMigrationFileName(string $fileName): bool
     {
-        $matches = array();
+        $matches = [];
         return preg_match(static::MIGRATION_FILE_NAME_PATTERN, $fileName, $matches);
     }
 
@@ -180,11 +194,12 @@ class Util
      * Check if a seed file name is valid.
      *
      * @param string $fileName File Name
+     *
      * @return boolean
      */
-    public static function isValidSeedFileName($fileName)
+    public static function isValidSeedFileName(string $fileName): bool
     {
-        $matches = array();
+        $matches = [];
         return preg_match(static::SEED_FILE_NAME_PATTERN, $fileName, $matches);
     }
 }
