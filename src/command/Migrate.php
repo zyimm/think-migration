@@ -140,12 +140,14 @@ abstract class Migrate extends Command
                     $fileNames[$class] = basename($filePath);
 
                     // load the migration file
-                    /** @noinspection PhpIncludeInspection */
                     require_once $filePath;
                     if (!class_exists($class)) {
-                        throw new InvalidArgumentException(sprintf('Could not find class "%s" in file "%s"', $class, $filePath));
+                        if (!class_exists('database\\migrations\\' . $class)) {
+                            throw new InvalidArgumentException(sprintf('Could not find class "%s" in file "%s"', $class, $filePath));
+                        } else {
+                            $class = 'database\\migrations\\' . $class;
+                        }
                     }
-
                     // instantiate it
                     $migration = new $class($version, $this->input, $this->output);
 
